@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DotNetTrainingEFCoreAjax.Database/DotNetTrainingEFCoreAjax.Database.csproj" />
+  <Project Path="DotNetTrainingEFCoreAjax.MvcAjax/DotNetTrainingEFCoreAjax.MvcAjax.csproj" />
+</Solution>
