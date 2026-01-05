@@ -33,7 +33,7 @@ namespace DotNetTrainingEFCoreAjax.MvcAjax.Controllers
             return View();
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Save(BlogTable blog)
         {
             await _db.BlogTables.AddAsync(blog);
@@ -46,18 +46,19 @@ namespace DotNetTrainingEFCoreAjax.MvcAjax.Controllers
             return Json(response);
         }
 
+        
         [HttpGet]
-        public async Task<IActionResult> Edit(int id) 
+        public async Task<IActionResult> EditBlog(int id)
         {
             var blog = await _db.BlogTables.AsNoTracking().FirstOrDefaultAsync(x => x.BlogId == id);
             if (blog is null)
             {
-                return Json(new { IsSuccess = false, Message = "Blog not found" });
+                return Json(new { IsSuccess = false, Message = "Blog not found." });
             }
             return Json(blog);
         }
 
-        public IActionResult EditBlog(int id)
+        public IActionResult Edit(int id)
         {
             ViewBag.BlogId = id;
             return View();

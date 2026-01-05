@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Edit Blog";
+}
+
+<input type="hidden" id="hfBlogId" value="@ViewBag.BlogId" />
+
+<div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" class="form-control" id="txtTitle">
+</div>
+<div class="mb-3">
+    <label class="form-label">Author</label>
+    <input type="text" class="form-control" id="txtAuthor">
+</div>
+<div class="mb-3">
+    <label class="form-label">Content</label>
+    <textarea class="form-control" id="txtContent" rows="3"></textarea>
+</div>
+<a href="/blog" class="btn btn-secondary">Cancel</a>
+<button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            loadBlogForEdit();
+        });
+
+        function loadBlogForEdit() {
+            const blogId = $('#hfBlogId').val();
+            $.ajax({
+                url: `/Blog/Edit/${blogId}`,
+                type: "GET",
+                success: function (response) {
+                    $('#txtTitle').val(response.blogTitle);
+                    $('#txtAuthor').val(response.blogAuthor);
+                    $('#txtContent').val(response.blogContent);
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        $('#btnUpdate').click(function () {
+            const blogId = $('#hfBlogId').val();
+            const blogData = {
+                BlogTitle: $('#txtTitle').val(),
+                BlogAuthor: $('#txtAuthor').val(),
+                BlogContent: $('#txtContent').val()
+            };
+
+            $.ajax({
+                url: `/Blog/Update/${blogId}`,
+                type: "POST",
+                data: blogData,
+                success: function (response) {
+                    alert(response.message);
+                    if (response.isSuccess) {
+                        window.location.href = "/blog";
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+}

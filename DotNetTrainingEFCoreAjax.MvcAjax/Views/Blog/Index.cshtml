@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Blog List";
+}
+
+<h1>Blog List</h1>
+<a href="/blog/create" class="btn btn-success mb-3">New Blog</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="blogTableBody">
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        // This function runs when the page is ready
+        $(document).ready(function () {
+            loadBlogs();
+        });
+
+        // Function to load blogs from the server
+        function loadBlogs() {
+            $.ajax({
+                url: "/Blog/List",
+                type: "GET",
+                success: function (response) {
+                    let tableRows = '';
+                    response.forEach(item => {
+                        tableRows += `
+                            <tr id="blog-row-${item.blogId}">
+                                <td>${item.blogId}</td>
+                                <td>${item.blogTitle}</td>
+                                <td>${item.blogAuthor}</td>
+                                <td>
+                                    <a href="/blog/edit/${item.blogId}" class="btn btn-warning btn-sm">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteBlog(${item.blogId})">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#blogTableBody').html(tableRows);
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        // Function to delete a blog
+        function deleteBlog(id) {
+            if (!confirm("Are you sure you want to delete this blog?")) {
+                return;
+            }
+
+            $.ajax({
+                url: `/Blog/Delete/${id}`,
+                type: "POST",
+                success: function (response) {
+                    alert(response.message);
+                    if (response.isSuccess) {
+                        loadBlogs(); // Reload the table data
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
+}

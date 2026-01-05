@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "New Blog";
+}
+
+<div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" class="form-control" id="txtTitle">
+</div>
+<div class="mb-3">
+    <label class="form-label">Author</label>
+    <input type="text" class="form-control" id="txtAuthor">
+</div>
+<div class="mb-3">
+    <label class="form-label">Content</label>
+    <textarea class="form-control" id="txtContent" rows="3"></textarea>
+</div>
+<a href="/blog" class="btn btn-secondary">Cancel</a>
+<button type="button" class="btn btn-primary" id="btnSave">Save</button>
+
+@section scripts {
+    <script>
+        $('#btnSave').click(function () {
+            const blogData = {
+                BlogTitle: $('#txtTitle').val(),
+                BlogAuthor: $('#txtAuthor').val(),
+                BlogContent: $('#txtContent').val()
+            };
+
+            $.ajax({
+                url: "/Blog/Save",
+                type: "POST",
+                data: blogData,
+                success: function (response) {
+                    alert(response.message);
+                    if (response.isSuccess) {
+                        window.location.href = "/blog";
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+}
